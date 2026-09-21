@@ -1,15 +1,56 @@
+# ==========================================
+# BACKEND (Python / FastAPI)
+# ==========================================
 # Rahasia
 .env
+.env.*
 
 # Bawaan Python
 __pycache__/
 *.pyc
 
 # Riwayat chat yang dihasilkan program.
-# Polanya sengaja spesifik - kalau ditulis *.json, contoh percakapan yang
-# sengaja disimpan sebagai bukti ikut terbuang juga.
 Riwayat/chat_kino_*.json
 Riwayat/uji_*.json
 
-# Lain-lain
+
+# ==========================================
+# FRONTEND (Next.js)
+# ==========================================
+# dependencies
+web/node_modules/
+web/.pnp
+web/.pnp.*
+web/.yarn/*
+!web/.yarn/patches
+!web/.yarn/plugins
+!web/.yarn/releases
+!web/.yarn/versions
+
+# testing
+web/coverage/
+
+# next.js
+web/.next/
+web/out/
+web/build/
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# vercel
+web/.vercel/
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+
+# ==========================================
+# LAIN-LAIN (Global)
+# ==========================================
 .DS_Store
+*.pem
