@@ -56,6 +56,20 @@ Kebanyakan chatbot rekomendasi film berhenti pada kalimat: *"ini daftar film bag
 
 Antarmuka Web KINO dirancang untuk memberikan pengalaman selayaknya situs kurasi film premium.
 
+<div align="center">
+  <img src="Screenshot/home.png" alt="Welcome Screen" width="800"/>
+  <br/>
+  <em>Tampilan Awal KINO</em>
+  <br/><br/>
+  <img src="Screenshot/chat.png" alt="Chat UI" width="800"/>
+  <br/>
+  <em>Antarmuka Percakapan dan Kurasi Rute</em>
+  <br/><br/>
+  <img src="Screenshot/sidebar.png" alt="Sidebar Settings" width="800"/>
+  <br/>
+  <em>Sidebar Statistik dan Pengaturan LLM</em>
+</div>
+
 * **Filosofi Estetika & Palet Warna**: Terinspirasi dari estetika **Rotten Tomatoes** dengan tema terang (Light Mode). Menggunakan aksen merah (`#FA320A`) dan latar belakang putih bersih (`#FFFFFF` & `#F5F5F5`).
 * **Stack Teknologi**: 
   - Dibangun murni dengan **Next.js (App Router)** dan *Vanilla CSS3*.
