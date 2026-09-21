@@ -241,6 +241,30 @@ def analisis_error(e):
 # ---------------------------------------------------------------------------
 # 6. PENGIRIMAN PESAN
 # ---------------------------------------------------------------------------
+# groq/compound menolak parameter reasoning_effort; model lain menerimanya.
+MODEL_TOLAK_REASONING = ("groq/compound",)
+
+
+def opsi_model(model):
+    """
+    Parameter tambahan yang hanya berlaku untuk sebagian model.
+
+    Model keluarga gpt-oss membelanjakan sebagian max_tokens untuk penalaran
+    internal SEBELUM menulis jawaban, dan penalaran itu ikut dihitung sebagai
+    token keluaran. Pada permintaan rumit, penalarannya bisa menghabiskan
+    seluruh jatah dan menyisakan jawaban benar-benar KOSONG - tanpa error apa
+    pun, karena dari sisi API panggilannya sukses.
+
+    Ini bukan dugaan: diuji sembilan kali pada permintaan yang sama dengan
+    max_tokens 600. Tanpa parameter ini, satu percobaan menghasilkan nol huruf
+    jawaban dengan 2612 huruf penalaran. Dengan reasoning_effort rendah,
+    penalaran tinggal sekitar 150 huruf dan jawaban selalu terbentuk.
+    """
+    if any(model.startswith(awalan) for awalan in MODEL_TOLAK_REASONING):
+        return {}
+    return {"reasoning_effort": "low"}
+
+
 def _stream_sekali(client, riwayat, model, suhu, maks_token):
     aliran = client.chat.completions.create(
         model=model,
@@ -248,6 +272,7 @@ def _stream_sekali(client, riwayat, model, suhu, maks_token):
         temperature=suhu,
         max_tokens=maks_token,
         stream=True,
+        **opsi_model(model),
     )
     for bagian in aliran:
         if not bagian.choices:
@@ -287,6 +312,20 @@ def kirim_pesan(
             for potongan in _stream_sekali(client, riwayat, model, suhu, maks_token):
                 ada_teks = True
                 yield "teks", potongan
+
+            if ada_teks:
+                return
+
+            # Aliran selesai tanpa satu pun potongan teks. Dari sisi API ini
+            # dianggap sukses, jadi tidak ada error yang tertangkap - dan tanpa
+            # penjagaan ini program hanya diam tanpa memberi tahu apa pun.
+            if percobaan < maks_percobaan:
+                yield "status", "Model tidak menghasilkan jawaban. Mencoba lagi..."
+                continue
+            yield "error", (
+                "Model selesai tanpa menghasilkan jawaban. Coba naikkan batas "
+                "panjang jawaban, sederhanakan pertanyaan, atau ganti model."
+            )
             return
         except Exception as e:
             pesan, layak_ulang, tunggu = analisis_error(e)

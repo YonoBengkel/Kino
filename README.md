@@ -216,6 +216,24 @@ Untuk rate limit ada satu nuansa penting. Groq punya **dua jenis batas**: per me
 
 > Catatan teknis: SDK `groq` sendiri sudah mengulang 2 kali secara diam-diam untuk sebagian error. Jadi `maks_percobaan=3` di kode ini berarti percobaan berlapis, bukan tepat tiga kali panggilan jaringan.
 
+### Kenapa ada `reasoning_effort` di `opsi_model()`
+
+Ini temuan dari pengujian, bukan salinan dari dokumentasi.
+
+Model keluarga `gpt-oss` melakukan penalaran internal **sebelum** menulis jawaban, dan penalaran itu ikut dihitung sebagai token keluaran. Pada permintaan yang rumit — misalnya `/rute`, yang meminta jalur bertahap lengkap dengan penjelasan — penalarannya bisa menghabiskan seluruh jatah `max_tokens` dan menyisakan jawaban **benar-benar kosong**. Dari sisi API panggilannya sukses, tidak ada error apa pun, jadi program cuma diam.
+
+Diuji sembilan kali pada permintaan yang sama dengan `max_tokens=600`:
+
+| `reasoning_effort` | Panjang penalaran | Panjang jawaban |
+|---|---|---|
+| `low` | ~150–190 huruf | 1115–1246 huruf, selalu terisi |
+| `medium` | 807–2449 huruf | pernah tinggal 115 huruf |
+| tidak diisi | sampai 2612 huruf | **pernah 0 huruf** |
+
+Karena itu `reasoning_effort="low"` dipasang otomatis. Parameter ini ditolak oleh `groq/compound`, jadi `opsi_model()` memeriksa nama model dulu sebelum mengirimkannya.
+
+Sebagai lapisan pengaman kedua, `kirim_pesan()` juga memeriksa kasus "aliran selesai tanpa satu pun potongan teks" dan memberi tahu pengguna — supaya kegagalan semacam ini tidak pernah lagi berlalu tanpa suara.
+
 ### Bagaimana statistik "film yang dibahas" bekerja
 
 Statistik angka biasa (jumlah pesan, rata-rata panjang) hanya perlu `len()` dan pengurangan waktu — murah, dihitung setiap saat.
