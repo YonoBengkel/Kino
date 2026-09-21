@@ -65,7 +65,7 @@ API_KEY=gsk_xxxxxxxxxxxxxxxxxxxxxxxx
 **3a. Menjalankan versi terminal**
 
 ```bash
-python chatbot_cli.py
+Buka file `kino_chatbot.ipynb` di VS Code, Jupyter Notebook, atau Google Colab, lalu jalankan semua sel (*Run All*).
 ```
 
 **3b. Menjalankan versi web**
@@ -151,7 +151,7 @@ Kamu > /statistik
 ```
 Chatbot/
 ├── core.py             ← otak bersama: persona, memori, error, statistik
-├── chatbot_cli.py      ← antarmuka terminal   (syarat utama)
+├── kino_chatbot.ipynb  ← antarmuka Jupyter Notebook (pengganti CLI)
 ├── api.py              ← backend FastAPI      (nilai tambah)
 ├── web/                ← antarmuka Next.js    (nilai tambah)
 ├── .env                ← API key (TIDAK ikut ter-push)
@@ -254,7 +254,7 @@ Karena cara ini memakan satu panggilan API tambahan, ekstraksi hanya dijalankan 
 
 | Ketentuan | Di mana |
 |---|---|
-| Berjalan di console/terminal | `chatbot_cli.py` |
+| Berjalan di console/notebook | `kino_chatbot.ipynb` |
 | Menggunakan API LLM | Groq, lewat `core.buat_klien()` |
 | Punya system prompt sesuai tema | `core._PERSONA` |
 | Mengelola conversation history | `core.riwayat_baru()`, `pangkas_riwayat()`, `tanya()` |
@@ -294,7 +294,7 @@ Sesuai ketentuan tugas, berikut pembagian yang sejujurnya:
 - Keputusan desain: memakai satu `core.py` bersama, cakupan perintah khusus, dan urutan prioritas pengerjaan.
 
 **Dibantu AI assistant:**
-- Penulisan kode `core.py`, `chatbot_cli.py`, dan `app.py`.
+- Penulisan kode `core.py`, `kino_chatbot.ipynb`, dan `app.py`.
 - Perancangan taksonomi error dan logika percobaan ulang untuk rate limit.
 - Penyusunan ulang teks system prompt.
 - Penyusunan README ini.
