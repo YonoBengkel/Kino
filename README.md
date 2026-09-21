@@ -2,7 +2,7 @@
 
 Chatbot AI berbasis LLM yang tidak sekadar merekomendasikan film, tapi menunjukkan **rute** dari film yang sudah kamu tonton menuju film yang lebih dalam.
 
-Tersedia dalam dua wujud: **versi terminal** (syarat utama tugas) dan **versi web Streamlit** (nilai tambah). Keduanya memakai otak yang sama.
+Tersedia dalam dua wujud: **versi terminal** (syarat utama tugas) dan **versi web Next.js + FastAPI** (nilai tambah). Keduanya memakai otak yang sama.
 
 ---
 
@@ -70,8 +70,15 @@ python chatbot_cli.py
 
 **3b. Menjalankan versi web**
 
+Jalankan backend:
 ```bash
-streamlit run app.py
+python -m uvicorn api:app --reload --port 8000
+```
+Jalankan frontend:
+```bash
+cd web
+npm install
+npm run dev
 ```
 
 Halaman akan terbuka sendiri di `http://localhost:8501`.
@@ -145,9 +152,8 @@ Kamu > /statistik
 Chatbot/
 ├── core.py             ← otak bersama: persona, memori, error, statistik
 ├── chatbot_cli.py      ← antarmuka terminal   (syarat utama)
-├── app.py              ← antarmuka web        (nilai tambah)
-├── .streamlit/
-│   └── config.toml     ← tema gelap ruang proyeksi
+├── api.py              ← backend FastAPI      (nilai tambah)
+├── web/                ← antarmuka Next.js    (nilai tambah)
 ├── .env                ← API key (TIDAK ikut ter-push)
 ├── .env.example        ← contoh isi .env
 ├── .gitignore
@@ -196,7 +202,7 @@ Tiga konsekuensi yang ditangani di kode ini:
 
 - **Biaya token membengkak.** Giliran ke-10 mengirim ulang sembilan giliran sebelumnya. Karena itu ada `pangkas_riwayat()`, yang hanya mengirim system prompt plus sejumlah pesan terakhir.
 - **Struktur bisa cacat.** Kalau API gagal setelah pesan pengguna masuk daftar, riwayat berisi dua pesan `user` berturut-turut tanpa jawaban di antaranya. Karena itu `tanya()` **mencabut kembali** pesan pengguna saat gagal — dan pencabutan itu diletakkan di blok `finally`, supaya tetap jalan meski pengguna menekan Ctrl+C di tengah jawaban.
-- **Streamlit butuh perlakuan khusus.** Streamlit menjalankan ulang seluruh berkas dari baris pertama setiap kali ada interaksi, jadi variabel biasa akan lahir kembali dalam keadaan kosong. `st.session_state` adalah satu-satunya tempat yang selamat dari rerun. Versi terminal tidak butuh ini karena prosesnya terus hidup.
+- **Aplikasi Web butuh perlakuan khusus.** Antarmuka web (Next.js) berkomunikasi via API call yang *stateless* (tiada ingatan), sehingga `api.py` harus meneruskan dan merakit ulang seluruh struktur pesan JSON yang dikirim dari *client* ke `core.py`. Versi terminal tidak butuh ini karena prosesnya terus hidup di memori.
 
 ### Bagaimana penanganan error bekerja
 
@@ -254,7 +260,7 @@ Karena cara ini memakan satu panggilan API tambahan, ekstraksi hanya dijalankan 
 | Mengelola conversation history | `core.riwayat_baru()`, `pangkas_riwayat()`, `tanya()` |
 | Penanganan error | `core.analisis_error()`, `core.kirim_pesan()` |
 | Minimal 2 perintah khusus | 9 perintah, lihat tabel di bagian 2 |
-| *Bonus* — tampilan web | `app.py` + `.streamlit/config.toml` |
+| *Bonus* — tampilan web | `api.py` + folder `web/` (Next.js) |
 | *Bonus* — streaming response | `core._stream_sekali()` |
 | *Bonus* — simpan & muat riwayat | `simpan_riwayat()`, `muat_riwayat()` |
 | *Bonus* — statistik percakapan | `hitung_statistik()`, `ekstrak_judul()` |
@@ -284,7 +290,7 @@ Sesuai ketentuan tugas, berikut pembagian yang sejujurnya:
 
 **Dikerjakan mandiri:**
 - Pemilihan tema dan keputusan bahwa konsepnya harus di-*reframe* dari "kurator film niche" menjadi "kurator rute" — karena versi pertama kontradiktif: menyebut The Godfather dan Forrest Gump sebagai film niche jelas tidak jujur.
-- Identifikasi bahwa versi awal proyek ini melewatkan syarat utama (hanya ada Streamlit, tidak ada versi terminal) dan bahwa perintah `exit`/`clear` yang diketik tidak pernah bekerja.
+- Identifikasi bahwa versi awal proyek ini melewatkan syarat utama (hanya ada Web UI, tidak ada versi terminal) dan bahwa perintah `exit`/`clear` yang diketik tidak pernah bekerja.
 - Keputusan desain: memakai satu `core.py` bersama, cakupan perintah khusus, dan urutan prioritas pengerjaan.
 
 **Dibantu AI assistant:**
