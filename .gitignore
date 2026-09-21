@@ -1,0 +1,15 @@
+# Rahasia
+.env
+
+# Bawaan Python
+__pycache__/
+*.pyc
+
+# Riwayat chat yang dihasilkan program.
+# Polanya sengaja spesifik - kalau ditulis *.json, contoh percakapan yang
+# sengaja disimpan sebagai bukti ikut terbuang juga.
+Riwayat/chat_kino_*.json
+Riwayat/uji_*.json
+
+# Lain-lain
+.DS_Store

@@ -1,0 +1,11 @@
+# Tema gelap ala ruang proyeksi: latar arang, aksen kuning lampu proyektor.
+[theme]
+base = "dark"
+primaryColor = "#E5A00D"
+backgroundColor = "#14161A"
+secondaryBackgroundColor = "#1E2127"
+textColor = "#E8E6E3"
+font = "serif"
+
+[client]
+toolbarMode = "minimal"
