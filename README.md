@@ -130,11 +130,18 @@ Kino/
 ## Panduan Menjalankan Program (Step-by-Step)
 
 ### A. Eksperimen di Notebook (Jupyter / Colab)
-Cara tercepat untuk menguji KINO, ideal untuk penilaian instan.
+File `kino_chatbot.ipynb` merupakan evolusi dari antarmuka *Command-Line Interface* (CLI) lawas kami, yang kini diubah menjadi format Notebook interaktif. 
+
+**Mengapa menggunakan Notebook?**
+Format ini secara khusus dirancang untuk menyelaraskan proyek dengan **modul referensi dosen pembimbing**, sehingga mempermudah proses evaluasi akademis. 
+* **Satu Inti (Core), Dua Wajah:** Meskipun antarmukanya berbeda (Notebook vs Web UI), `kino_chatbot.ipynb` tetap menggunakan otak logika yang persis sama dari `core.py` (Persona, Manajemen Memori, dan interaksi Groq API).
+* **Interaktif & Bersih:** Jauh lebih mudah dibaca dan digunakan dibandingkan teks putih-hitam di terminal biasa.
+
+**Cara Penggunaan (Sangat disarankan untuk penilaian instan):**
 1. Buka file `kino_chatbot.ipynb` menggunakan Jupyter Notebook lokal atau unggah ke **Google Colab**.
 2. *Run* sel pertama untuk menginstal pustaka yang dibutuhkan.
 3. *Run* sel kedua dan masukkan **Groq API Key** ketika diminta (Dapatkan secara gratis di [console.groq.com](https://console.groq.com/keys)).
-4. *Run* sel ketiga untuk memulai interaksi obrolan secara langsung di dalam Notebook!
+4. *Run* sel ketiga untuk memulai interaksi obrolan secara langsung di dalam sel Notebook!
 
 ### B. Menjalankan Web UI Interaktif Lokal (Fullstack)
 Bagi yang menginginkan pengalaman interaktif penuh dengan antarmuka grafis estetis.
